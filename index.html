@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memorama</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+  }
+  
+  #gameBoard {
+    display: flex;
+    flex-wrap: wrap;
+    width: 300px;
+  }
+  
+  .card {
+    width: calc(25% - 10px);
+    height: 100px;
+    margin: 5px;
+    background-color: lightblue;
+    border: 1px solid #999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .card:hover {
+    background-color: lightcyan;
+  }
+</style>
+</head>
+<body>
+
+<h2>Memorama</h2>
+
+<div id="gameBoard"></div>
+
+<script>
+const emojis = ['😀', '😍', '😎', '🥳', '😜', '😇', '🤓', '😂', '🥰', '😊'];
+const board = document.getElementById('gameBoard');
+let flippedCard = null;
+let matchedPairs = 0;
+
+// Función para crear el tablero del juego
+function createBoard() {
+    const shuffledEmojis = shuffle(emojis.concat(emojis));
+    shuffledEmojis.forEach(emoji => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.textContent = ''; // Inicialmente no mostrar ninguna carta
+        card.addEventListener('click', () => flipCard(card, emoji));
+        board.appendChild(card);
+    });
+}
+
+// Función para voltear la tarjeta
+function flipCard(card, emoji) {
+    if (flippedCard === null || flippedCard === card) {
+        card.textContent = emoji;
+        card.style.backgroundColor = 'white';
+        flippedCard = card;
+    } else {
+        if (flippedCard.textContent === emoji) {
+            card.style.backgroundColor = 'lightgreen';
+            flippedCard.style.backgroundColor = 'lightgreen';
+            matchedPairs++;
+            if (matchedPairs === emojis.length) {
+                setTimeout(() => alert('¡Felicidades! Has encontrado todos los pares.'), 500);
+            }
+        } else {
+            setTimeout(() => {
+                card.textContent = ''; // Ocultar la carta incorrecta
+                flippedCard.textContent = ''; // Ocultar la carta incorrecta
+                card.style.backgroundColor = 'lightblue';
+                flippedCard.style.backgroundColor = 'lightblue';
+            }, 500);
+        }
+        flippedCard = null;
+    }
+}
+
+// Función para mezclar el arreglo de emojis
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+// Inicializar el juego
+createBoard();
+</script>
+
+</body>
+</html>
